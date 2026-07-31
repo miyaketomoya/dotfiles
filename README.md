@@ -10,6 +10,8 @@
 - **[starship](https://starship.rs)** — シェルプロンプト設定。公式の
   [Tokyo Nightプリセット](https://starship.rs/presets/tokyo-night.html)（ghosttyの
   テーマと統一）をベースに、gitブランチ表示とpythonモジュールを追加したもの。
+- **zsh** — `.zshrc`自体は個人設定込みのため含めていないが、追記したスニペットだけ
+  `zsh/snippets/` に置いている（`Ctrl+X Ctrl+E`でコマンドラインを`$EDITOR`で編集）。
 
 ## 構成
 
@@ -24,8 +26,10 @@ dotfiles/
 │   └── quick-actions/claude.toml
 ├── ghostty/
 │   └── config.ghostty
-└── starship/
-    └── starship.toml
+├── starship/
+│   └── starship.toml
+└── zsh/snippets/
+    └── edit-command-line.zsh
 ```
 
 ## インストール
@@ -83,3 +87,31 @@ cd ~/dotfiles
 - プロンプトにはOSアイコン・ディレクトリ・**gitブランチ / 変更状態**・python / nodejs /
   rust / golang / php のバージョン・時刻を表示します。アイコン表示には Nerd Font が必要
   （ghosttyのフォント設定 `PlemolJP35 Console NF` で対応済み）。
+
+## ghostty追加設定について
+
+`copy-on-select`（選択と同時にクリップボードへコピー）に加えて、以下を追加済み:
+
+- `macos-option-as-alt = true` — Optionキーを特殊文字入力ではなくAltとして扱う。zshの
+  emacsバインド（`Alt+←/→`で単語移動、`Alt+Backspace`で単語削除）が使えるようになる。
+- `mouse-hide-while-typing = true` — 入力中はマウスカーソルを隠す。
+- `window-save-state = always` — 再起動後もウィンドウ/タブ構成を復元する。
+
+設定を変更したら `ghostty +validate-config --config-file=<path>` で構文検証できる
+（`/Applications/Ghostty.app/Contents/MacOS/ghostty` から実行）。
+
+## ターミナルを本格的なエディタのように使いたい場合
+
+ターミナルの「今まで出力された文字列」は、シェル側から見るとただの過去ログで編集対象では
+ないため、複数行を範囲選択してまとめて削除する、といったテキストエディタ的な操作はghostty
+単体でもherdr経由でも原理的にできません。編集できるのは常に「現在入力中の1行」だけです。
+
+その制約の中で一番近い体験を作るのが `Ctrl+X Ctrl+E`（`zsh/snippets/edit-command-line.zsh`）
+です。今入力中のコマンドをまるごと `$EDITOR`（デフォルト `vim`）に渡して編集し、確定すると
+そのままシェルに戻ります。複数行編集・検索置換など、エディタでできることはここに限ってはすべて
+使えます。マウス操作（クリックでカーソル移動など）に依存しないキーバインドなので、herdrの
+ペインの中でも同じように動作するはずです。
+
+一方、ghosttyのshell integration由来の「クリックでカーソル移動」「Ctrl+トリプルクリックで
+コマンド出力選択」は、herdrのようなマルチプレクサ越しだと機能しない可能性があります（詳細は
+会話ログ参照）。試して動かなければ、上記の `Ctrl+X Ctrl+E` を使うのがおすすめです。

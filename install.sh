@@ -61,4 +61,14 @@ if command -v starship >/dev/null 2>&1; then
   fi
 fi
 
+ZSHRC="$HOME/.zshrc"
+if [ -f "$ZSHRC" ] && ! grep -q "edit-command-line" "$ZSHRC"; then
+  echo "==> .zshrcにedit-command-line（Ctrl+X Ctrl+Eで\$EDITOR編集）を追記中"
+  {
+    echo ""
+    echo "# Added by dotfiles: edit current command line in \$EDITOR (like a text editor)"
+    cat "$DOTFILES_DIR/zsh/snippets/edit-command-line.zsh"
+  } >> "$ZSHRC"
+fi
+
 echo "==> 完了しました。"

@@ -20,5 +20,14 @@ clipboard-write = allow
 copy-on-select = clipboard
 
 clipboard-trim-trailing-spaces = true
-macos-titlebar-style = tabs
 window-new-tab-position = current
+
+# Optionキーをmacosの特殊文字入力ではなくAltとして扱う。
+# zshのemacsバインド（Alt+←/→で単語移動、Alt+BackSpaceで単語削除）が有効になる。
+macos-option-as-alt = true
+
+# 入力中はマウスカーソルを隠す
+mouse-hide-while-typing = true
+
+# クラッシュ/再起動後にウィンドウ・タブ構成を復元する
+window-save-state = always
