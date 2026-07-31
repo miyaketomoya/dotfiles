@@ -1,0 +1,7 @@
+# auto_open disabled because herdr-plus's worktree/project layouts now open
+# reviewr explicitly (avoids both plugins racing to react to the same
+# worktree.created/opened event).
+auto_open = false
+
+toggle_placement = "split"
+toggle_direction = "right"

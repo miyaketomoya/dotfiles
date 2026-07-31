@@ -1,0 +1,25 @@
+# Wildcard worktree auto-layout: fires on `worktree create` / `worktree open`
+# for ANY repo that doesn't have its own more-specific worktrees/*.toml file.
+# Delete this file (or move it out of worktrees/) to turn it off.
+repo = "*"
+
+[[tabs]]
+name = "dev"
+
+[[tabs.panes]]
+label = "Claude"
+command = "claude"
+
+[[tabs.panes]]
+label = "Terminal"
+split = "down"
+
+[[tabs.panes]]
+label = "Dashboard"
+command = "herdr plugin action invoke dave.token-dashboard.open-dashboard"
+split = "right"
+
+[[tabs.panes]]
+label = "Reviewr"
+command = "herdr plugin action invoke open --plugin persiyanov.reviewr"
+split = "right"

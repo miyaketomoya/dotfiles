@@ -1,0 +1,3 @@
+# Reachable via prefix+down (herdr-plus: quick actions picker).
+name = "Claude"
+command = "claude"
