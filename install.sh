@@ -40,4 +40,25 @@ if [ -d "$HOME/Library/Application Support" ]; then
   link "$DOTFILES_DIR/ghostty/config.ghostty" "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty"
 fi
 
+if ! command -v starship >/dev/null 2>&1; then
+  if command -v brew >/dev/null 2>&1; then
+    echo "==> starshipをインストール中"
+    brew install starship
+  else
+    echo "starshipもHomebrewも無いため、starshipのインストールはスキップします。"
+  fi
+fi
+
+if command -v starship >/dev/null 2>&1; then
+  echo "==> starshipの設定をリンク中"
+  link "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
+
+  # .zshrcは個人設定を含む共有ファイルなので、丸ごと置き換えず初期化行だけ追記する
+  ZSHRC="$HOME/.zshrc"
+  if [ -f "$ZSHRC" ] && ! grep -q "starship init" "$ZSHRC"; then
+    printf '\n# Added by dotfiles: starship prompt\neval "$(starship init zsh)"\n' >> "$ZSHRC"
+    echo "$ZSHRC に starship init 行を追記しました"
+  fi
+fi
+
 echo "==> 完了しました。"

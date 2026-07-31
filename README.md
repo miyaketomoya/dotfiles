@@ -7,8 +7,9 @@
   [reviewr](https://github.com/persiyanov/herdr-reviewr)）用のプラグインinstallコマンド
   + 設定ファイル。
 - **[ghostty](https://ghostty.org)** — ターミナル設定。
-- *（starshipはこのマシンにまだ導入されていません。導入したら `starship/`
-  ディレクトリを作り、`install.sh` にsymlink処理を追加してください）*
+- **[starship](https://starship.rs)** — シェルプロンプト設定。公式の
+  [Tokyo Nightプリセット](https://starship.rs/presets/tokyo-night.html)（ghosttyの
+  テーマと統一）をベースに、gitブランチ表示とpythonモジュールを追加したもの。
 
 ## 構成
 
@@ -21,8 +22,10 @@ dotfiles/
 ├── herdr-plus/
 │   ├── worktrees/default.toml                          # repo = "*" のワイルドカードレイアウト
 │   └── quick-actions/claude.toml
-└── ghostty/
-    └── config.ghostty
+├── ghostty/
+│   └── config.ghostty
+└── starship/
+    └── starship.toml
 ```
 
 ## インストール
@@ -67,3 +70,16 @@ cd ~/dotfiles
 
 試してみる: `herdr worktree open <任意のリポジトリのパス>` — 自動的に4ペインレイアウトが
 立ち上がるはずです。
+
+## starshipセットアップの詳細
+
+- `install.sh` は `starship` コマンドが無ければ Homebrew 経由でインストールします
+  （Homebrewも無い場合はスキップ）。
+- `starship/starship.toml` は他の用途と衝突しない専用ファイルなので、そのままシンボリック
+  リンクで `~/.config/starship.toml` に配置します。
+- `.zshrc` は個人設定を含む共有ファイルなので、`herdr/config.toml` と違い**丸ごと置き換え
+  ません**。`eval "$(starship init zsh)"` の行が無い場合のみ末尾に追記します（既に何らかの
+  形でstarshipを初期化済みなら何もしません）。
+- プロンプトにはOSアイコン・ディレクトリ・**gitブランチ / 変更状態**・python / nodejs /
+  rust / golang / php のバージョン・時刻を表示します。アイコン表示には Nerd Font が必要
+  （ghosttyのフォント設定 `PlemolJP35 Console NF` で対応済み）。
