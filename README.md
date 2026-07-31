@@ -11,7 +11,9 @@
   [Tokyo Nightプリセット](https://starship.rs/presets/tokyo-night.html)（ghosttyの
   テーマと統一）をベースに、gitブランチ表示とpythonモジュールを追加したもの。
 - **zsh** — `.zshrc`自体は個人設定込みのため含めていないが、追記したスニペットだけ
-  `zsh/snippets/` に置いている（`Ctrl+X Ctrl+E`でコマンドラインを`$EDITOR`で編集）。
+  `zsh/snippets/` に置いている（`Ctrl+X Ctrl+E`でコマンドラインを`$EDITOR`で編集、
+  [fzf](https://github.com/junegunn/fzf)のシェル統合で`Ctrl+R`履歴検索/`Ctrl+T`ファイル
+  選択/`Alt+C`のあいまいcd）。
 
 ## 構成
 

@@ -71,4 +71,22 @@ if [ -f "$ZSHRC" ] && ! grep -q "edit-command-line" "$ZSHRC"; then
   } >> "$ZSHRC"
 fi
 
+if ! command -v fzf >/dev/null 2>&1; then
+  if command -v brew >/dev/null 2>&1; then
+    echo "==> fzfをインストール中"
+    brew install fzf
+  else
+    echo "fzfもHomebrewも無いため、fzfのインストールはスキップします。"
+  fi
+fi
+
+if command -v fzf >/dev/null 2>&1 && [ -f "$ZSHRC" ] && ! grep -q "fzf --zsh" "$ZSHRC"; then
+  echo "==> .zshrcにfzfのシェル統合を追記中"
+  {
+    echo ""
+    echo "# Added by dotfiles: fzf shell integration (Ctrl+R history, Ctrl+T file, Alt+C cd)"
+    cat "$DOTFILES_DIR/zsh/snippets/fzf.zsh"
+  } >> "$ZSHRC"
+fi
+
 echo "==> 完了しました。"
