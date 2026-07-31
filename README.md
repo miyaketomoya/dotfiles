@@ -42,6 +42,10 @@ cd ~/dotfiles
 実行すると、そのファイルはバックアップされたうえで丸ごと置き換わります。既存設定を残したい
 場合は、事前に手動でマージしてください。
 
+**すでに使っているMacで、既存のherdr設定を壊さずherdr/herdr-plus部分だけ入れたい場合**は
+`install.sh` を使わず、[MANUAL_SETUP.md](MANUAL_SETUP.md) の手順で必要な部分だけ手で
+追記してください。
+
 ## herdrセットアップの詳細
 
 - **worktree自動レイアウト**（`herdr-plus/worktrees/default.toml`、`repo = "*"`）は、
