@@ -1,66 +1,65 @@
-# herdr-dotfiles
+# dotfiles
 
-Personal [herdr](https://herdr.dev) plugin setup: install commands + config files for
-a 4-pane dev layout (claude / terminal / [token-dashboard](https://github.com/Davidcreador/herdr-token-dashboard)
-/ [reviewr](https://github.com/persiyanov/herdr-reviewr)), driven by
-[herdr-plus](https://github.com/cloudmanic/herdr-plus)'s worktree auto-layout, plus a
-few keybindings for opening each tool directly.
+Personal machine setup, one directory per tool. Currently:
 
-## What this sets up
+- **[herdr](https://herdr.dev)** — plugin installs + config for a 4-pane dev layout
+  (claude / terminal / [token-dashboard](https://github.com/Davidcreador/herdr-token-dashboard)
+  / [reviewr](https://github.com/persiyanov/herdr-reviewr)).
+- **[ghostty](https://ghostty.org)** — terminal config.
+- *(starship not set up on this machine yet — add a `starship/` dir + symlink in
+  `install.sh` once it is.)*
 
-- **Plugins**: `persiyanov/herdr-reviewr`, `cloudmanic/herdr-plus`,
-  `Davidcreador/herdr-token-dashboard`.
-- **Worktree auto-layout** (`herdr-plus/worktrees/default.toml`, `repo = "*"`) — fires
-  automatically for **any** repo on `herdr worktree create` / `herdr worktree open`.
-  Layout: claude full-width on top; terminal / token-dashboard / reviewr as three even
-  panes underneath.
-  - Note: herdr-plus only supports splitting a pane off the *previous* pane in the
-    array (a linear chain), not arbitrary grid targeting. A literal 4-quadrant grid
-    with claude locked to one corner isn't expressible that way — this layout is the
-    closest practical approximation.
-- **Quick action** (`herdr-plus/quick-actions/claude.toml`) — launches `claude` alone,
-  reachable via the quick-actions picker (`prefix+down`). There's no plugin action to
-  launch claude directly with a single key, so this needs the picker as an extra step.
-- **reviewr config** (`herdr/plugins/config/persiyanov.reviewr/config.toml`) —
-  `auto_open = false`, because the worktree auto-layout above opens reviewr itself; both
-  reacting to the same worktree event would race.
-- **herdr `config.toml`** — full personal config (theme, other plugin keybindings,
-  etc.), including these additions on top of what was already there:
-  - `prefix+shift+r` → toggle reviewr
-  - `prefix+shift+d` → open token-dashboard
-  - `prefix+shift+p` → herdr-plus projects picker (alias of the pre-existing
-    `prefix+up`)
+## Layout
+
+```
+dotfiles/
+├── install.sh
+├── herdr/
+│   ├── config.toml                                    # full personal config (theme, keybindings, ...)
+│   └── plugins/config/persiyanov.reviewr/config.toml
+├── herdr-plus/
+│   ├── worktrees/default.toml                          # repo = "*" wildcard layout
+│   └── quick-actions/claude.toml
+└── ghostty/
+    └── config.ghostty
+```
 
 ## Install
 
-Requires **herdr >= 0.7.0** on `PATH`.
-
 ```bash
-git clone <this-repo-url> ~/herdr-dotfiles
-cd ~/herdr-dotfiles
+git clone git@github.com:miyaketomoya/dotfiles.git ~/dotfiles
+cd ~/dotfiles
 ./install.sh
 ```
 
-`install.sh`:
-1. Installs the three plugins via `herdr plugin install`.
-2. Symlinks each config file from this repo into `~/.config/herdr/...` and
-   `~/.config/herdr-plus/...`, backing up any existing file first
-   (`<file>.bak.<timestamp>`).
+`install.sh` symlinks each file into place under `~/.config/...` (or
+`~/Library/Application Support/...` for ghostty on macOS), backing up any existing
+file first (`<file>.bak.<timestamp>`). It only touches a tool's files if that tool's
+prerequisite is present (e.g. herdr plugins/config are skipped if `herdr` isn't on
+`PATH`).
 
-Because `herdr/config.toml` here is a full personal file (not just a snippet), running
-this on a machine that already has its own herdr config will back that file up and
-replace it wholesale — merge manually instead of running `install.sh` blindly if you
-want to keep an existing config's personal settings.
+Because `herdr/config.toml` is a full personal file (not just a snippet), running this
+on a machine with its own existing herdr config will back that file up and replace it
+wholesale — merge manually first if you want to keep that machine's own settings.
 
-After linking, restart herdr or run `herdr server reload-config`.
+## herdr setup details
 
-## Try it
+- **Worktree auto-layout** (`herdr-plus/worktrees/default.toml`, `repo = "*"`) fires
+  automatically for **any** repo on `herdr worktree create` / `herdr worktree open`.
+  Layout: claude full-width on top; terminal / token-dashboard / reviewr as three even
+  panes underneath.
+  - herdr-plus only supports splitting a pane off the *previous* pane in the array (a
+    linear chain), not arbitrary grid targeting, so a literal 4-quadrant grid with
+    claude locked to one corner isn't expressible — this is the closest practical
+    approximation.
+- **Quick action** (`herdr-plus/quick-actions/claude.toml`) launches `claude` alone,
+  reachable via the quick-actions picker (`prefix+down`). There's no plugin action to
+  launch claude directly with a single key, so this needs the picker as an extra step.
+- **reviewr config** sets `auto_open = false`, because the worktree auto-layout above
+  opens reviewr itself; both reacting to the same worktree event would race.
+- Keybindings added on top of the base herdr config: `prefix+shift+r` (toggle reviewr),
+  `prefix+shift+d` (open token-dashboard), `prefix+shift+p` (herdr-plus projects
+  picker, alias of the pre-existing `prefix+up`).
 
-```bash
-herdr worktree open <path-to-any-repo>
-```
-
-The 4-pane layout should appear automatically. Individual tools:
-`prefix+shift+r` (reviewr), `prefix+shift+d` (dashboard),
-`prefix+down` → "Claude" (quick action), `prefix+up` (projects picker — empty until
-you add project files under `~/.config/herdr-plus/projects/`).
+Try it: `herdr worktree open <path-to-any-repo>` — the 4-pane layout should appear
+automatically.
