@@ -17,6 +17,7 @@ quick-terminal-animation-duration = 0.3
 keybind = "cmd+shift+t=toggle_quick_terminal"
 
 clipboard-write = allow
+copy-on-select = clipboard
 
 clipboard-trim-trailing-spaces = true
 macos-titlebar-style = tabs
