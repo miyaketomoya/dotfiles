@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Symlinks this repo's config files into place (backing up any existing file
-# first, as *.bak.<timestamp>), and installs the herdr plugins this setup
-# depends on. Editing a symlinked file later edits the copy in this repo too.
+# このリポジトリ内の設定ファイルを本来の場所にシンボリックリンクとして配置し
+# （既存ファイルがあれば *.bak.<timestamp> としてバックアップ）、
+# このセットアップが依存するherdrプラグインをインストールする。
+# シンボリックリンク先を編集すると、このリポジトリ内のファイルも変更される。
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,32 +12,32 @@ link() {
   mkdir -p "$(dirname "$dest")"
   if [ -e "$dest" ] && [ ! -L "$dest" ]; then
     mv "$dest" "$dest.bak.$(date +%s)"
-    echo "backed up existing $dest"
+    echo "既存の $dest をバックアップしました"
   fi
   ln -sfn "$src" "$dest"
-  echo "linked $dest -> $src"
+  echo "リンクしました: $dest -> $src"
 }
 
 if command -v herdr >/dev/null 2>&1; then
-  echo "==> Installing herdr plugins"
+  echo "==> herdrプラグインをインストール中"
   herdr plugin install persiyanov/herdr-reviewr
   herdr plugin install cloudmanic/herdr-plus
   herdr plugin install Davidcreador/herdr-token-dashboard
 
-  echo "==> Linking herdr config files"
+  echo "==> herdrの設定ファイルをリンク中"
   link "$DOTFILES_DIR/herdr/config.toml" "$HOME/.config/herdr/config.toml"
   link "$DOTFILES_DIR/herdr/plugins/config/persiyanov.reviewr/config.toml" "$HOME/.config/herdr/plugins/config/persiyanov.reviewr/config.toml"
   link "$DOTFILES_DIR/herdr-plus/worktrees/default.toml" "$HOME/.config/herdr-plus/worktrees/default.toml"
   link "$DOTFILES_DIR/herdr-plus/quick-actions/claude.toml" "$HOME/.config/herdr-plus/quick-actions/claude.toml"
 
-  echo "==> Restart herdr, or run: herdr server reload-config"
+  echo "==> herdrを再起動するか、herdr server reload-config を実行してください"
 else
-  echo "herdr not found on PATH, skipping herdr plugins/config."
+  echo "herdrがPATH上に見つからないため、herdr関連のプラグイン・設定はスキップします。"
 fi
 
 if [ -d "$HOME/Library/Application Support" ]; then
-  echo "==> Linking ghostty config"
+  echo "==> ghosttyの設定をリンク中"
   link "$DOTFILES_DIR/ghostty/config.ghostty" "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty"
 fi
 
-echo "==> Done."
+echo "==> 完了しました。"

@@ -1,30 +1,31 @@
 # dotfiles
 
-Personal machine setup, one directory per tool. Currently:
+個人PCのセットアップ一式。ツールごとにディレクトリを分けて管理しています。現在含まれるもの:
 
-- **[herdr](https://herdr.dev)** — plugin installs + config for a 4-pane dev layout
-  (claude / terminal / [token-dashboard](https://github.com/Davidcreador/herdr-token-dashboard)
-  / [reviewr](https://github.com/persiyanov/herdr-reviewr)).
-- **[ghostty](https://ghostty.org)** — terminal config.
-- *(starship not set up on this machine yet — add a `starship/` dir + symlink in
-  `install.sh` once it is.)*
+- **[herdr](https://herdr.dev)** — 4ペイン開発レイアウト（claude / terminal /
+  [token-dashboard](https://github.com/Davidcreador/herdr-token-dashboard) /
+  [reviewr](https://github.com/persiyanov/herdr-reviewr)）用のプラグインinstallコマンド
+  + 設定ファイル。
+- **[ghostty](https://ghostty.org)** — ターミナル設定。
+- *（starshipはこのマシンにまだ導入されていません。導入したら `starship/`
+  ディレクトリを作り、`install.sh` にsymlink処理を追加してください）*
 
-## Layout
+## 構成
 
 ```
 dotfiles/
 ├── install.sh
 ├── herdr/
-│   ├── config.toml                                    # full personal config (theme, keybindings, ...)
+│   ├── config.toml                                    # 個人設定一式（テーマ・キーバインドなど）
 │   └── plugins/config/persiyanov.reviewr/config.toml
 ├── herdr-plus/
-│   ├── worktrees/default.toml                          # repo = "*" wildcard layout
+│   ├── worktrees/default.toml                          # repo = "*" のワイルドカードレイアウト
 │   └── quick-actions/claude.toml
 └── ghostty/
     └── config.ghostty
 ```
 
-## Install
+## インストール
 
 ```bash
 git clone git@github.com:miyaketomoya/dotfiles.git ~/dotfiles
@@ -32,34 +33,33 @@ cd ~/dotfiles
 ./install.sh
 ```
 
-`install.sh` symlinks each file into place under `~/.config/...` (or
-`~/Library/Application Support/...` for ghostty on macOS), backing up any existing
-file first (`<file>.bak.<timestamp>`). It only touches a tool's files if that tool's
-prerequisite is present (e.g. herdr plugins/config are skipped if `herdr` isn't on
-`PATH`).
+`install.sh` は各ファイルを `~/.config/...`（macOSのghosttyは
+`~/Library/Application Support/...`）にシンボリックリンクとして配置します。既存ファイル
+がある場合は先にバックアップ（`<file>.bak.<timestamp>`）を取ります。各ツールの前提コマンド
+（例: `herdr`）が無ければ、そのツール分の処理はスキップされます。
 
-Because `herdr/config.toml` is a full personal file (not just a snippet), running this
-on a machine with its own existing herdr config will back that file up and replace it
-wholesale — merge manually first if you want to keep that machine's own settings.
+`herdr/config.toml` は個人設定を丸ごと含むファイルなので、既存のherdr設定を持つマシンで
+実行すると、そのファイルはバックアップされたうえで丸ごと置き換わります。既存設定を残したい
+場合は、事前に手動でマージしてください。
 
-## herdr setup details
+## herdrセットアップの詳細
 
-- **Worktree auto-layout** (`herdr-plus/worktrees/default.toml`, `repo = "*"`) fires
-  automatically for **any** repo on `herdr worktree create` / `herdr worktree open`.
-  Layout: claude full-width on top; terminal / token-dashboard / reviewr as three even
-  panes underneath.
-  - herdr-plus only supports splitting a pane off the *previous* pane in the array (a
-    linear chain), not arbitrary grid targeting, so a literal 4-quadrant grid with
-    claude locked to one corner isn't expressible — this is the closest practical
-    approximation.
-- **Quick action** (`herdr-plus/quick-actions/claude.toml`) launches `claude` alone,
-  reachable via the quick-actions picker (`prefix+down`). There's no plugin action to
-  launch claude directly with a single key, so this needs the picker as an extra step.
-- **reviewr config** sets `auto_open = false`, because the worktree auto-layout above
-  opens reviewr itself; both reacting to the same worktree event would race.
-- Keybindings added on top of the base herdr config: `prefix+shift+r` (toggle reviewr),
-  `prefix+shift+d` (open token-dashboard), `prefix+shift+p` (herdr-plus projects
-  picker, alias of the pre-existing `prefix+up`).
+- **worktree自動レイアウト**（`herdr-plus/worktrees/default.toml`、`repo = "*"`）は、
+  `herdr worktree create` / `herdr worktree open` 実行時に**どのリポジトリでも**自動的に
+  発火します。レイアウトは、上段にclaudeを幅いっぱいに配置し、下段にterminal /
+  token-dashboard / reviewrを均等3分割で配置します。
+  - herdr-plusは配列内の**直前のペイン**からしか分割できない（一直線のチェーン構造）ため、
+    任意のグリッド配置はできません。claudeを1つの角だけに固定する厳密な4分割グリッドは
+    表現できないため、これは現実的に近い近似形です。
+- **Quick Action**（`herdr-plus/quick-actions/claude.toml`）はclaude単体を起動します。
+  quick actionsピッカー（`prefix+down`）経由でのみ到達可能です。claudeを1キーで直接起動
+  するプラグインアクションが存在しないため、ピッカーを経由する1手間が必要です。
+- **reviewrの設定**では `auto_open = false` を指定しています。上記のworktree自動レイア
+  ウトがreviewrを明示的に開くため、両方が同じworktreeイベントに反応するとレース状態になる
+  のを防ぐためです。
+- ベースのherdr設定に追加したキーバインド: `prefix+shift+r`（reviewrのトグル）、
+  `prefix+shift+d`（token-dashboardを開く）、`prefix+shift+p`（herdr-plusのprojectsピッカー、
+  既存の`prefix+up`のエイリアス）。
 
-Try it: `herdr worktree open <path-to-any-repo>` — the 4-pane layout should appear
-automatically.
+試してみる: `herdr worktree open <任意のリポジトリのパス>` — 自動的に4ペインレイアウトが
+立ち上がるはずです。
