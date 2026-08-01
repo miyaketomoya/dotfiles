@@ -72,7 +72,8 @@ cd ~/dotfiles
   のを防ぐためです。
 - ベースのherdr設定に追加したキーバインド: `prefix+shift+r`（reviewrのトグル）、
   `prefix+shift+d`（token-dashboardを開く）、`prefix+shift+p`（herdr-plusのprojectsピッカー、
-  既存の`prefix+up`のエイリアス）。
+  既存の`prefix+up`のエイリアス）、`[keys] switch_workspace = "prefix+shift+1..9"`
+  （ワークスペース切り替え。デフォルトの`switch_tab`＝`prefix+1..9`のshift版）。
 
 試してみる: `herdr worktree open <任意のリポジトリのパス>` — 自動的に4ペインレイアウトが
 立ち上がるはずです。
