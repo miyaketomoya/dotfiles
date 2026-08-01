@@ -56,3 +56,7 @@ key = "prefix+shift+p"
 type = "plugin_action"
 command = "cloudmanic.herdr-plus.projects"
 description = "herdr-plus: projects (alias of prefix+up)"
+
+# switch tab (prefix+1..9) のshift版。ワークスペースをインデックスで切り替える。
+[keys]
+switch_workspace = "prefix+shift+1..9"
